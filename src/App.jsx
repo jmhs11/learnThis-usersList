@@ -5,7 +5,7 @@ const USERS = [
 		username: 'pablo',
 		name: 'Pablo Castellanos',
 		active: true,
-		role: 'teacher'
+		role: 'other'
 	},
 	{
 		username: 'jose',
@@ -14,7 +14,7 @@ const USERS = [
 		role: 'teacher'
 	},
 	{
-		username: 'Javier',
+		username: 'javier',
 		name: 'Javier Lopez',
 		active: false,
 		role: 'student'

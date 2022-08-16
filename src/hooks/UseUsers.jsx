@@ -1,23 +1,10 @@
 import { useState } from 'react';
 
 const useUsers = initialUsers => {
-	const [users, setUsers] = useState(initialUsers);
-
-	const toggleUserActive = userId => {
-		const newUsers = [...users];
-
-		const userIndex = newUsers.findIndex(user => user.username === userId);
-
-		if (userIndex === -1) return;
-
-		newUsers[userIndex].active = !newUsers[userIndex].active;
-
-		setUsers(newUsers);
-	};
+	const [users] = useState(initialUsers);
 
 	return {
-		users,
-		toggleUserActive
+		users
 	};
 };
 
