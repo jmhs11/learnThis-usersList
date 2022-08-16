@@ -8,7 +8,13 @@ const useFilters = () => {
 	});
 
 	const setSearch = search => setFilters({ ...filters, search });
-	const setOnlyActive = onlyActive => setFilters({ ...filters, onlyActive });
+	const setOnlyActive = onlyActive => {
+		if (onlyActive && filters.sortBy === 3) {
+			setFilters({ ...filters, onlyActive, sortBy: 0 });
+		} else {
+			setFilters({ ...filters, onlyActive });
+		}
+	};
 	const setSortBy = sortBy => setFilters({ ...filters, sortBy });
 
 	return {
