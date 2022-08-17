@@ -1,7 +1,7 @@
+import { SORT_OPTIONS } from '../constants/sortOptions';
 import InputCheckbox from './forms/InputCheckbox';
 import InputSearch from './forms/InputSearch';
 import Select from './forms/Select';
-import { SORT_OPTIONS } from '../constants/sortOptions';
 import style from './UsersListFilters.module.css';
 
 const UsersListFilters = ({
@@ -10,7 +10,8 @@ const UsersListFilters = ({
 	onlyActive,
 	setOnlyActive,
 	sortBy,
-	setSortBy
+	setSortBy,
+	slot
 }) => {
 	return (
 		<div className={style.form}>
@@ -42,6 +43,7 @@ const UsersListFilters = ({
 					/>
 					<p>Mostrar sólo activos</p>
 				</div>
+				{slot}
 			</div>
 		</div>
 	);
