@@ -4,7 +4,7 @@ const ArrowLeftIcon = ({ className, ...props }) => {
 			{...props}
 			fill='none'
 			stroke='currentColor'
-			className={`${''} ${className || ''}`}
+			className={className}
 			viewBox='0 0 24 24'
 			xmlns='http://www.w3.org/2000/svg'
 		>
