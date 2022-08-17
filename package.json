@@ -15,7 +15,8 @@
 		"lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
 		"stylelint": "npx stylelint '**/*.css' --fix",
 		"format": "prettier --write .",
-		"prepare": "husky install"
+		"prepare": "husky install",
+		"server": "json-server ./users.json -p 4000"
 	},
 	"dependencies": {
 		"react": "18.2.0",
@@ -37,6 +38,7 @@
 		"eslint-plugin-react-hooks": "4.6.0",
 		"husky": "8.0.1",
 		"jsdom": "20.0.0",
+		"json-server": "0.17.0",
 		"lint-staged": "13.0.3",
 		"prettier": "2.7.1",
 		"stylelint": "14.9.1",
