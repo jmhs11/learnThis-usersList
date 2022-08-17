@@ -1,3 +1,4 @@
+import PageSelector from './forms/PageSelector';
 import Select from './forms/Select';
 import styles from './UsersListPagination.module.css';
 
@@ -5,7 +6,8 @@ const UsersListPagination = ({
 	page,
 	itemsPerPage,
 	setPage,
-	setItemsPerPage
+	setItemsPerPage,
+	totalPages
 }) => {
 	return (
 		<div className={styles.wrapper}>
@@ -20,6 +22,7 @@ const UsersListPagination = ({
 				</Select>
 				<p>Elementos por página</p>
 			</div>
+			<PageSelector page={page} totalPages={totalPages} setPage={setPage} />
 		</div>
 	);
 };

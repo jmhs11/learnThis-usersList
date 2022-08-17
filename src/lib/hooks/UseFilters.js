@@ -5,10 +5,12 @@ const useFilters = () => {
 	const [filters, setFilters] = useState({
 		search: '',
 		onlyActive: false,
-		sortBy: SORT_OPTIONS.DEFAULT
+		sortBy: SORT_OPTIONS.DEFAULT,
+		page: 1,
+		itemsPerPage: 2
 	});
 
-	const setSearch = search => setFilters({ ...filters, search });
+	const setSearch = search => setFilters({ ...filters, search, page: 1 });
 
 	const setOnlyActive = onlyActive => {
 		const newSortBy =
@@ -16,16 +18,23 @@ const useFilters = () => {
 				? SORT_OPTIONS.DEFAULT
 				: filters.sortBy;
 
-		setFilters({ ...filters, onlyActive, sortBy: newSortBy });
+		setFilters({ ...filters, onlyActive, sortBy: newSortBy, page: 1 });
 	};
 
 	const setSortBy = sortBy => setFilters({ ...filters, sortBy });
 
+	const setPage = newPage => setFilters({ ...filters, page: newPage });
+
+	const setItemsPerPage = newItemsPerPage =>
+		setFilters({ ...filters, itemsPerPage: newItemsPerPage });
+
 	return {
-		...filters,
+		filters,
 		setSearch,
 		setOnlyActive,
-		setSortBy
+		setSortBy,
+		setPage,
+		setItemsPerPage
 	};
 };
 
