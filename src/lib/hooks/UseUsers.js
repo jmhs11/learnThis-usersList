@@ -1,41 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-	filterActiveUsers,
-	filterUsersByName,
-	paginateUsers,
-	sortUsers
-} from '../users/filterUsers';
-
-const fetchUsers = async (setData, setError, signal) => {
-	try {
-		const res = await fetch('http://localhost:4000/users', { signal });
-		if (res.ok) {
-			const data = await res.json();
-			setData(data);
-		} else {
-			setError();
-		}
-	} catch (error) {
-		setError();
-	}
-};
-
-const getUsersToDisplay = (
-	users,
-	{ onlyActive, search, sortBy, page, itemsPerPage }
-) => {
-	let usersFiltered = filterActiveUsers(users, onlyActive);
-	usersFiltered = filterUsersByName(usersFiltered, search);
-	usersFiltered = sortUsers(usersFiltered, sortBy);
-
-	const { paginatedUsers, totalPages } = paginateUsers(
-		usersFiltered,
-		page,
-		itemsPerPage
-	);
-
-	return { paginatedUsers, totalPages };
-};
+import { findAllUsers } from '../api/usersApi';
 
 export const useUsers = filters => {
 	const [users, setUsers] = useState({
@@ -47,21 +11,29 @@ export const useUsers = filters => {
 	const setData = newData =>
 		setUsers({ data: newData, loading: false, error: false });
 	const setError = () => setUsers({ data: [], loading: false, error: true });
+	const reloadUsers = () => setUsers({ data: [], loading: true, error: false });
 
 	useEffect(() => {
+		if (!users.loading) return;
 		const controller = new AbortController();
 
-		fetchUsers(setData, setError, controller.signal);
+		loadUsers(setData, setError, controller.signal);
 
 		return () => controller.abort();
-	}, []);
-
-	const { paginatedUsers, totalPages } = getUsersToDisplay(users.data, filters);
+	}, [users.loading]);
 
 	return {
-		users: paginatedUsers,
-		totalPages,
-		error: users.error,
-		loading: users.loading
+		users: users.data,
+		usersError: users.error,
+		usersLoading: users.loading,
+		reloadUsers
 	};
+};
+
+const loadUsers = async (setData, setError, signal) => {
+	const { users, aborted } = await findAllUsers(signal);
+
+	if (aborted) return;
+	if (users) setData(users);
+	else setError();
 };

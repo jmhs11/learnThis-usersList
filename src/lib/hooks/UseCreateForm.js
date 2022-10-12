@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { findUserByUsername } from '../api/usersApi';
 import { validateName, validateUsername } from '../users/userValidations';
 
 export const useCreateForm = () => {
@@ -13,27 +14,6 @@ export const useCreateForm = () => {
 			error: undefined
 		}
 	});
-
-	const validateUsernameAsync = async (username, setUsernameError, signal) => {
-		let error;
-
-		try {
-			const res = await fetch(
-				`http://localhost:4000/users?username=${username}`,
-				{ signal }
-			);
-			if (res.ok) {
-				const data = await res.json();
-				if (data.length) error = 'El username ya existe';
-			} else {
-				error = 'Error al validar el username';
-			}
-		} catch {
-			error = 'Error al validar el username';
-		}
-
-		setUsernameError(error);
-	};
 
 	const setName = newName => {
 		const error = validateName(newName);
@@ -64,23 +44,39 @@ export const useCreateForm = () => {
 		}));
 
 	useEffect(() => {
-		if (formValues.username.loading) {
-			const controler = new AbortController();
-			const timeoutId = setTimeout(
-				() =>
-					validateUsernameAsync(
-						formValues.username.value,
-						setUsernameError,
-						controler.signal
-					),
-				500
-			);
-			return () => {
-				controler.abort();
-				clearTimeout(timeoutId);
-			};
-		}
+		if (!formValues.username.loading) return;
+
+		const controler = new AbortController();
+		const timeoutId = setTimeout(
+			() =>
+				validateUsernameAsync(
+					formValues.username.value,
+					setUsernameError,
+					controler.signal
+				),
+			500
+		);
+		return () => {
+			controler.abort();
+			clearTimeout(timeoutId);
+		};
 	}, [formValues.username.value, formValues.username.loading]);
 
-	return { ...formValues, setName, setUsername };
+	const isFormValid =
+		!formValues.username.value ||
+		!formValues.name.value ||
+		formValues.username.error ||
+		formValues.name.error ||
+		formValues.username.loading;
+
+	return { ...formValues, setName, setUsername, isFormValid };
+};
+
+const validateUsernameAsync = async (username, setUsernameError, signal) => {
+	const { user, error, aborted } = await findUserByUsername(username, signal);
+
+	if (aborted) return;
+	if (error) return setUsernameError('Error al validar');
+
+	setUsernameError(user ? 'Ya esta en uso' : undefined);
 };
